@@ -1,0 +1,38 @@
+#!/bin/bash
+
+NAME="{{ packageName }}"
+# January 28, 2017 -- ssteinerX
+# TODO:
+# These are from the template I started with (from an Ansible package) and are
+# left here for possible future expansion and/or setting to unusable
+# default values if they are required to be overridden for this to work
+# Other comments from the same source are marked below with # IBID
+# FLASKDIR="{{ flaskapp_destination_directory }}"
+# VENVDIR="{{ flaskapp_virtualenv }}"
+# SOCKFILE=$FLASKDIR/sock
+
+NUM_WORKERS=2
+HOST=127.0.0.1
+PORT={{ serverPort }}
+
+echo "Starting $NAME"
+
+# IBID
+# activate the virtualenv
+# cd $VENVDIR
+# source bin/activate
+
+# IBID
+# export PYTHONPATH=$FLASKDIR:$PYTHONPATH
+
+# IBID
+# Create the run directory if it doesn't exist
+# RUNDIR=$(dirname $SOCKFILE)
+# test -d $RUNDIR || mkdir -p $RUNDIR
+
+# Start gunicorn
+exec gunicorn {{ packageName }}.app:create_app\(\) -b $HOST:$PORT \
+  --name $NAME \
+  --workers $NUM_WORKERS \
+  --log-level=warn \
+  --bind=unix:$SOCKFILE
